@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.github.michalmszczepanski</groupId>
-	<artifactId>project21-car-report</artifactId>
+	<artifactId>project21-car-watcher</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
