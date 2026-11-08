@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AutoWatch — szczegóły ogłoszenia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand mb-0 h1 text-decoration-none" href="index.html">🚗 AutoWatch</a>
+        <a href="index.html" class="btn btn-outline-light btn-sm">&larr; Wszystkie ogłoszenia</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div id="loading" class="text-center text-muted py-5">Wczytywanie...</div>
+    <div id="error-state" class="alert alert-danger d-none"></div>
+
+    <div id="content" class="d-none">
+        <div class="row g-4 align-items-start">
+            <div class="col-12 col-lg-8 d-flex flex-column gap-3">
+                <div>
+                <h2 id="title" class="mb-1"></h2>
+                <p class="text-muted mb-3">
+                    Źródło: <span id="source"></span> ·
+                    Status: <span id="status" class="badge"></span> ·
+                    Ostatnio sprawdzone: <span id="last-checked"></span>
+                </p>
+                <a id="original-url" href="#" target="_blank" rel="noopener" class="d-inline-block mb-3">Zobacz oryginalne ogłoszenie &rarr;</a>
+
+                <div id="changes-summary" class="alert mb-3" role="alert"></div>
+
+                <div id="photos-featured" class="mb-2"></div>
+                <div class="mb-3">
+                    <button class="btn btn-sm btn-outline-secondary d-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#photos-more" id="photos-more-toggle">
+                        Pokaż więcej zdjęć
+                    </button>
+                    <div class="collapse mt-2" id="photos-more">
+                        <div id="photos-more-grid" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 col-md-3 mb-2"><strong>Cena</strong><br><span id="price" class="price-value"></span></div>
+                            <div class="col-6 col-md-3 mb-2"><strong>Przebieg</strong><br><span id="mileage"></span></div>
+                            <div class="col-6 col-md-3 mb-2"><strong>Paliwo</strong><br><span id="fuel"></span></div>
+                            <div class="col-6 col-md-3 mb-2"><strong>Skrzynia</strong><br><span id="gearbox"></span></div>
+                            <div class="col-6 col-md-3 mb-2"><strong>Rok produkcji</strong><br><span id="year"></span></div>
+                            <div class="col-6 col-md-3 mb-2"><strong>Lokalizacja</strong><br><span id="location"></span></div>
+                        </div>
+                        <button class="btn btn-sm btn-link ps-0 mt-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#description-collapse">
+                            Pokaż/ukryj opis
+                        </button>
+                        <div class="collapse description-box" id="description-collapse">
+                            <div id="description" class="text-muted small"></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <div>
+                    <h4>Historia cen i przebiegu</h4>
+                    <canvas id="price-chart" class="mb-3" height="120"></canvas>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Data</th><th>Cena</th><th>Przebieg</th></tr></thead>
+                            <tbody id="snapshots-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4 d-flex flex-column gap-3">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">VIN i data pierwszej rejestracji</h5>
+                        <p class="text-muted small">Niedostępne automatycznie (VIN chroniony przez reCAPTCHA na otomoto, data zaszyfrowana) — uzupełnij ręcznie, jeśli znasz.</p>
+                        <form id="vin-form">
+                            <div class="mb-2">
+                                <label class="form-label small">VIN (17 znaków)</label>
+                                <input type="text" id="vin-input" class="form-control form-control-sm" maxlength="17" placeholder="np. WVWZZZ1KZAW123456">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Data pierwszej rejestracji</label>
+                                <input type="date" id="date-input" class="form-control form-control-sm">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Zapisz</button>
+                            <span id="vin-save-status" class="small ms-2"></span>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Pełny raport historii pojazdu</h5>
+                        <p class="text-muted small">Sprawdź historię tego VIN-u (szkody, przebiegi, dane z zagranicy) u zewnętrznego dostawcy.</p>
+                        <a href="https://www.autodna.pl/sprawdzenie-vin" target="_blank" rel="noopener" class="btn btn-outline-primary">Kup pełny raport (autoDNA) &rarr;</a>
+                        <p class="text-muted" style="font-size: 0.75rem;" class="mt-2">Link zewnętrzny, placeholder — docelowo program partnerski/afiliacyjny.</p>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Darmowe sprawdzenie (Polska, CEPiK)</h6>
+                        <p class="text-muted small mb-2">historiapojazdu.gov.pl — oficjalny, bezpłatny serwis rządowy. <strong>Uwaga:</strong> wymaga ręcznego podania aż trzech danych: numeru rejestracyjnego, VIN-u i daty pierwszej rejestracji — numeru rejestracyjnego nie zbieramy, więc to nie jest sprawdzenie jednym kliknięciem. Przyda się dowód rejestracyjny pojazdu.</p>
+                        <a href="https://historiapojazdu.gov.pl/" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Otwórz historiapojazdu.gov.pl &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Darmowe sprawdzenie (USA)</h6>
+                        <p class="text-muted small mb-2">NICB VINCheck — bezpłatna, publiczna baza kradzieży i szkód całkowitych zgłoszonych przez ubezpieczycieli w USA. Limit: 5 sprawdzeń/dobę z jednego adresu IP.</p>
+                        <a href="https://www.nicb.org/vincheck" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Sprawdź na NICB VINCheck &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Szukaj tego samego auta na innych portalach</h6>
+                        <p class="text-muted small mb-2">VIN rzadko pojawia się w treści ogłoszeń, więc szukamy po marce/modelu/roczniku zamiast VIN-u — mniej precyzyjne, ale realnie coś znajdzie.</p>
+                        <div id="external-search-links" class="d-flex flex-column gap-1"></div>
+                    </div>
+                </div>
+
+                <div id="changes-section">
+                    <h4>Historia zmian</h4>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Pole</th><th>Było</th><th>Jest</th><th>Wykryto</th></tr></thead>
+                            <tbody id="changes-body"></tbody>
+                        </table>
+                        <p id="no-changes" class="text-muted d-none">Brak wykrytych zmian — tylko jeden odczyt albo bez różnic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.4.17/dist/purify.min.js"></script>
+<script src="js/format.js"></script>
+<script src="js/api.js"></script>
+<script src="js/externalSearch.js"></script>
+<script src="js/listing.js"></script>
+</body>
+</html>

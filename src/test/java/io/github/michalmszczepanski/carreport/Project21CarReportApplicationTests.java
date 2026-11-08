@@ -1,4 +1,4 @@
-package io.github.michalmszczepanski.project21_car_report;
+package io.github.michalmszczepanski.carreport;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

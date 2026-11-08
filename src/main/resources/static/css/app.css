@@ -1,0 +1,65 @@
+body {
+    background-color: #f5f6f8;
+}
+
+.listing-thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background-color: #e9ecef;
+}
+
+.listing-thumb-placeholder {
+    width: 100%;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.price-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.card-listing {
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.card-listing:hover {
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+}
+
+.photo-featured-main {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+}
+
+.photo-featured-medium {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+}
+
+.photo-thumb-small {
+    width: 110px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+.description-box {
+    max-width: 100%;
+}
+
+@media (min-width: 992px) {
+    .description-box {
+        max-width: 50%;
+    }
+}
